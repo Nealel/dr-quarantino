@@ -1,4 +1,0 @@
-app:
-    schedule: 0 0 10,15 * * MON-FRI
-
-server.port: 0
