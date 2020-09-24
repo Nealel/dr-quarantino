@@ -1,13 +1,4 @@
 app:
     schedule: 0 0 10,15 * * MON-FRI
 
-slack:
-    webhook.url:
-
-spring:
-  datasource:
-    type: com.zaxxer.hikari.HikariDataSource
-    url: 
-    username:
-    password:
-    driver-class-name:
+server.port: 0
