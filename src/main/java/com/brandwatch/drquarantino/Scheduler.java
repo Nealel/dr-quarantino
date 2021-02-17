@@ -15,12 +15,21 @@ public class Scheduler {
     @Autowired
     private SlackSender slackSender;
 
+    private volatile int slot;
+
     @Scheduled(cron = "${app.schedule}")
     public void run() {
-        Question question = questionStorage.getQuestion();
+        Question question = questionStorage.getScheduledQuestion(slot)
+                .orElseGet(questionStorage::getRandomQuestion);
         log.info("Sending question: {}", question);
         slackSender.ask(question);
         questionStorage.markAsAsked(question);
+        slot++;
+    }
+
+    @Scheduled(cron = "0 0 0 * * SUN")
+    public void resetWeek() {
+        slot = 0;
     }
 
 }
