@@ -21,8 +21,7 @@ public class QuestionStorage {
 
     public static final String SELECT_RECURRING_QUESTION =
             "SELECT question FROM discord_chatbot_questions " +
-                    "WHERE recurring " +
-                    "AND recurring_slot = :slot " +
+                    "WHERE recurring_slot = :slot " +
                     "LIMIT 1";
 
     public static final String MARK_AS_ASKED = "UPDATE discord_chatbot_questions SET last_asked = now() WHERE question = :question";
