@@ -41,8 +41,7 @@ public class Scheduler {
     @Scheduled(cron = "${app.schedule}")
     public void run() {
         log.info("slot is {}", slot);
-        Question question = questionStorage.getScheduledQuestion(slot)
-                .orElseGet(questionStorage::getRandomQuestion);
+        Question question = questionStorage.getQuestion(slot);
         log.info("Sending question: {}", question);
         slackSender.ask(question);
         questionStorage.markAsAsked(question);
