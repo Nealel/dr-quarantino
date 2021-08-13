@@ -50,7 +50,7 @@ public class QuestionStorage {
     }
 
     public int countQuestions() {
-        return jdbcTemplate.queryForObject(COUNT_QUESTIONS, Map.of(), Integer.class);
+        return jdbcTemplate.queryForObject(COUNT_QUESTIONS, ImmutableMap.of(), Integer.class);
     }
 
     public Question getQuestion(int slot) {
@@ -62,7 +62,7 @@ public class QuestionStorage {
     }
 
     public void insertQuestion(String question) {
-        jdbcTemplate.update(INSERT_QUESTION, Map.of("question", question));
+        jdbcTemplate.update(INSERT_QUESTION, ImmutableMap.of("question", question));
     }
 
     private List<Question> getScheduledQuestion(int slot) {
