@@ -2,6 +2,7 @@ package com.brandwatch.drquarantino;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.annotation.PostConstruct;
@@ -22,9 +23,8 @@ public class QuestionStorage {
     public static final String SELECT_RANDOM_QUESTION =
             "SELECT question FROM discord_chatbot_questions " +
             "WHERE recurring_slot IS NULL " +
-            "ORDER BY last_asked NULLS FIRST, user_submitted DESC, random() " +
+            "ORDER BY last_asked NULLS FIRST, random() " +
             "LIMIT 1";
-
 
     public static final String SELECT_RECURRING_QUESTION =
             "SELECT question FROM discord_chatbot_questions " +
@@ -33,11 +33,24 @@ public class QuestionStorage {
 
     public static final String MARK_AS_ASKED = "UPDATE discord_chatbot_questions SET last_asked = now() WHERE question = :question";
 
+    public static final String COUNT_QUESTIONS =
+            "SELECT count(*) FROM discord_chatbot_questions " +
+                    "WHERE last_asked IS NULL";
+
+    public static final String INSERT_QUESTION =
+            "INSERT INTO discord_chatbot_questions (question, user_submitted) " +
+                    "VALUES (:question, true) " +
+                    "ON CONFLICT (question) DO UPDATE SET last_asked = null, user_submitted = true";
+
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     public Question getRandomQuestion() {
         return new Question(jdbcTemplate.queryForObject(SELECT_RANDOM_QUESTION, new HashMap<>(), String.class));
+    }
+
+    public int countQuestions() {
+        return jdbcTemplate.queryForObject(COUNT_QUESTIONS, Map.of(), Integer.class);
     }
 
     public Question getQuestion(int slot) {
@@ -46,6 +59,10 @@ public class QuestionStorage {
             return getRandomQuestion();
         }
         return scheduledQuestions.get(0);
+    }
+
+    public void insertQuestion(String question) {
+        jdbcTemplate.update(INSERT_QUESTION, Map.of("question", question));
     }
 
     private List<Question> getScheduledQuestion(int slot) {
