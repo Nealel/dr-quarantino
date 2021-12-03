@@ -20,6 +20,14 @@ class SlackSenderTest {
     }
 
     @Test
+    public void wouldYouRatherWithTooManyOptionsQuestion() throws JsonProcessingException {
+        String inputText = "     Would you rather have a clown only you can see that follows you everywhere and just stands silently in a corner watching you without doing or saying anything or have a real-life stalker who dresses like the Easter bunny that everyone can see?";
+        String actualResult = slackSender.getQuestionJson(new Question(inputText));
+        String expectedResult = "{\"text\":\"     Would you rather have a clown only you can see that follows you everywhere and just stands silently in a corner watching you without doing or saying anything or have a real-life stalker who dresses like the Easter bunny that everyone can see?\"}";
+        assertThat(actualResult, equalTo(expectedResult));
+    }
+
+    @Test
     public void normalQuestion() throws JsonProcessingException {
         String inputText = "What's your favourite pizza topping?";
         String actualResult = slackSender.getQuestionJson(new Question(inputText));
