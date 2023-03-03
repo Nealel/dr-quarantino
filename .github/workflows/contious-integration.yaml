@@ -1,0 +1,14 @@
+name: continuous integration
+
+on: [push, pull_request]
+
+jobs:
+  run-mvn-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2.3.4
+      - name: run the maven tests
+        run: mvn verify
+      - name: Run check style
+        uses: nikitasavinov/checkstyle-action@master
